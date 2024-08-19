@@ -1,3 +1,5 @@
+const TIERS = {0:"D", 1:"C", 2:"B", 3:"A", 4:"S", 5:"Inhumanly Basic"}
+
 const generateRandomString = (length) => {
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const values = crypto.getRandomValues(new Uint8Array(length));
@@ -96,5 +98,15 @@ async function fetchTopArtists() {
 
     const body2 = await fetch('https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50&offset=51', {headers: {Authorization: 'Bearer ' + token}});
     const response2 =await body2.json();
+
+    let cumu_pop = 0
+    for (item of body1.items) {
+        cumu_pop += item.popularity
+    }
+    for (item of body2.items) {
+        cumu_pop += item.popularity
+    }
+
+    alert("Your taste is " + TIERS.get(Math.floor((cumu_pop / 100)/20)) + " tier.")
 
 }
