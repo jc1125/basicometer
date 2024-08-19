@@ -1,6 +1,6 @@
 const TIERS = {0:"D", 1:"C", 2:"B", 3:"A", 4:"S", 5:"Inhumanly Basic"}
 
-const resetLocal = () => {
+function resetLocal() {
     localStorage.clear()
 }
 
