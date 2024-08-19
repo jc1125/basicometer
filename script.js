@@ -108,13 +108,13 @@ async function fetchTopArtists() {
     for (item of response1.items) {
         cumu_pop += item.popularity
         p = document.createElement('p')
-        p.innerText = item.name
+        p.innerText = "[Name] " + item.name + " [Popularity]: " + item.popularity
         document.getElementById('result2').appendChild(p)
     }
     for (item of response2.items) {
         cumu_pop += item.popularity
         p = document.createElement('p')
-        p.innerText = item.name
+        p.innerText = "[Name] " + item.name + " [Popularity]: " + item.popularity
         document.getElementById('result2').appendChild(p)
     }
 
