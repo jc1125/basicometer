@@ -1,5 +1,9 @@
 const TIERS = {0:"D", 1:"C", 2:"B", 3:"A", 4:"S", 5:"Inhumanly Basic"}
 
+const resetLocal = () => {
+    localStorage.clear()
+}
+
 const generateRandomString = (length) => {
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const values = crypto.getRandomValues(new Uint8Array(length));
@@ -21,6 +25,7 @@ const base64encode = (input) => {
 
 document.getElementById('auth-button').addEventListener('click', authenticateWithSpotify);
 document.getElementById('fetch-button').addEventListener('click', fetchTopArtists);
+document.getElementById('reset').addEventListener('click', resetLocal);
 
 const clientId = 'a4d2dbad912341e7a2f44213568fb4a2';
 const redirectUri = 'https://jc1125.github.io/basicometer/';
@@ -102,9 +107,15 @@ async function fetchTopArtists() {
     let cumu_pop = 0
     for (item of response1.items) {
         cumu_pop += item.popularity
+        p = document.createElement('p')
+        p.innerText = item.name
+        document.getElementById('result2').appendChild(p)
     }
     for (item of response2.items) {
         cumu_pop += item.popularity
+        p = document.createElement('p')
+        p.innerText = item.name
+        document.getElementById('result2').appendChild(p)
     }
 
     avg_pop = cumu_pop / 100
