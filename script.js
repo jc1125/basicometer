@@ -107,6 +107,8 @@ async function fetchTopArtists() {
         cumu_pop += item.popularity
     }
 
-    alert("Your taste is " + TIERS[Math.floor((cumu_pop / 100)/20)] + " tier.")
+    avg_pop = cumu_pop / 100
+
+    alert("Your taste is " + TIERS[Math.floor(avg_pop/20)] + " tier basic based on your top 100 artists with an average popularity of " + avg_pop)
 
 }
