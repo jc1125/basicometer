@@ -25,11 +25,15 @@ const redirectUri = 'https://jc1125.github.io/basicometer/';
 
 const scope = 'user-read-private user-read-email';
 const authUrl = new URL("https://accounts.spotify.com/authorize")
-const codeVerifier  = generateRandomString(64);
-window.localStorage.setItem('code_verifier', codeVerifier);
+
+if (!window.localStorage.getItem('code_verifier')){
+    let codeVerifier  = generateRandomString(64);
+    window.localStorage.setItem('code_verifier', codeVerifier);
+}
 
 async function authenticateWithSpotify() {
     
+    const codeVerifier = window.localStorage.getItem('code_verifier')
     const hashed = await sha256(codeVerifier)
     const codeChallenge = base64encode(hashed);
 
@@ -49,33 +53,35 @@ async function authenticateWithSpotify() {
 
 async function fetchTopArtists() {
     // Fetch top artists logic here
-    const urlParams = new URLSearchParams(window.location.search);
-    let code = urlParams.get('code');
+    if (!window.localStorage.getItem("access_token")){
+        const urlParams = new URLSearchParams(window.location.search);
+        let code = urlParams.get('code');
 
-    // stored in the previous step
-    let codeVerifier = localStorage.getItem('code_verifier');
+        // stored in the previous step
+        let codeVerifier = localStorage.getItem('code_verifier');
 
-    const tokenUrl = new URL("https://accounts.spotify.com/api/token")
-    
-    const payload = {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-        client_id: clientId,
-        grant_type: 'authorization_code',
-        code,
-        redirect_uri: redirectUri,
-        code_verifier: codeVerifier,
-        }),
+        const tokenUrl = new URL("https://accounts.spotify.com/api/token")
+        
+        const payload = {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+            client_id: clientId,
+            grant_type: 'authorization_code',
+            code,
+            redirect_uri: redirectUri,
+            code_verifier: codeVerifier,
+            }),
+        }
+        
+        const body = await fetch(tokenUrl, payload);
+        const response =await body.json();
+        
+        localStorage.setItem('access_token', response.access_token);
     }
-    
-    const body = await fetch(tokenUrl, payload);
-    const response =await body.json();
-    
-    localStorage.setItem('access_token', response.access_token);
-
+    token = window.localStorage.getItem("access_token")
     console.log("Token:")
     console.log(localStorage.getItem('access_token'))
 }
