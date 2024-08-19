@@ -127,6 +127,6 @@ async function fetchTopArtists() {
 
     avg_pop = Math.floor(cumu_pop / total_artists)
 
-    document.getElementById('result-text').innerText = "Your taste is " + TIERS[Math.floor(avg_pop/20)] + " tier basic based on your top 100 artists with an average popularity of " + avg_pop
+    document.getElementById('result-text').innerText = "Your taste is " + TIERS[Math.floor(avg_pop/20)] + " tier basic based on your top "+total_artists+" artists with an average popularity of " + avg_pop
 
 }
