@@ -41,7 +41,7 @@ async function authenticateWithSpotify() {
     const params =  {
     response_type: 'code',
     client_id: clientId,
-    scope,
+    scope: "user-top-read",
     code_challenge_method: 'S256',
     code_challenge: codeChallenge,
     redirect_uri: redirectUri,
@@ -52,7 +52,7 @@ async function authenticateWithSpotify() {
 }
 
 async function fetchTopArtists() {
-    // Fetch top artists logic here
+    // Auth if needed
     if (!window.localStorage.getItem("access_token")){
         const urlParams = new URLSearchParams(window.location.search);
         let code = urlParams.get('code');
@@ -82,6 +82,19 @@ async function fetchTopArtists() {
         localStorage.setItem('access_token', response.access_token);
     }
     token = window.localStorage.getItem("access_token")
-    console.log("Token:")
-    console.log(localStorage.getItem('access_token'))
+
+    // Get top song data
+    const payload = {
+        method: 'GET',
+        headers: {
+        'Authorization': 'Bearer ' + token,
+        }
+    }
+    
+    const body1 = await fetch('https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50&offset=0', {headers: {Authorization: 'Bearer ' + token}});
+    const response1 =await body1.json();
+
+    const body2 = await fetch('https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50&offset=51', {headers: {Authorization: 'Bearer ' + token}});
+    const response2 =await body2.json();
+
 }
