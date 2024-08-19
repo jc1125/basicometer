@@ -60,7 +60,7 @@ async function authenticateWithSpotify() {
 
 async function fetchTopArtists() {
     // Auth if needed
-    if (!window.localStorage.getItem("access_token")){
+    if (!window.localStorage.getItem("access_token") || window.localStorage.getItem("access_token") == "undefined"){
         const urlParams = new URLSearchParams(window.location.search);
         let code = urlParams.get('code');
 
