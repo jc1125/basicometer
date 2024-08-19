@@ -100,13 +100,13 @@ async function fetchTopArtists() {
     const response2 =await body2.json();
 
     let cumu_pop = 0
-    for (item of body1.items) {
+    for (item of response1.items) {
         cumu_pop += item.popularity
     }
-    for (item of body2.items) {
+    for (item of response2.items) {
         cumu_pop += item.popularity
     }
 
-    alert("Your taste is " + TIERS.get(Math.floor((cumu_pop / 100)/20)) + " tier.")
+    alert("Your taste is " + TIERS[Math.floor((cumu_pop / 100)/20)] + " tier.")
 
 }
