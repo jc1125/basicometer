@@ -52,8 +52,10 @@ async function fetchTopArtists() {
     const urlParams = new URLSearchParams(window.location.search);
     let code = urlParams.get('code');
 
-        // stored in the previous step
+    // stored in the previous step
     let codeVerifier = localStorage.getItem('code_verifier');
+
+    const tokenUrl = new URL("https://accounts.spotify.com/api/token")
     
     const payload = {
         method: 'POST',
@@ -69,7 +71,7 @@ async function fetchTopArtists() {
         }),
     }
     
-    const body = await fetch(url, payload);
+    const body = await fetch(tokenUrl, payload);
     const response =await body.json();
     
     localStorage.setItem('access_token', response.access_token);
