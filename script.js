@@ -20,21 +20,20 @@ const base64encode = (input) => {
 document.getElementById('auth-button').addEventListener('click', authenticateWithSpotify);
 document.getElementById('fetch-button').addEventListener('click', fetchTopArtists);
 
-async function authenticateWithSpotify() {
+const clientId = 'a4d2dbad912341e7a2f44213568fb4a2';
+const redirectUri = 'https://jc1125.github.io/basicometer/';
 
-    const codeVerifier  = generateRandomString(64);
+const scope = 'user-read-private user-read-email';
+const authUrl = new URL("https://accounts.spotify.com/authorize")
+const codeVerifier  = generateRandomString(64);
+window.localStorage.setItem('code_verifier', codeVerifier);
+
+async function authenticateWithSpotify() {
+    
     const hashed = await sha256(codeVerifier)
     const codeChallenge = base64encode(hashed);
 
-    const clientId = 'a4d2dbad912341e7a2f44213568fb4a2';
-    const redirectUri = 'https://jc1125.github.io/basicometer/';
-
-    const scope = 'user-read-private user-read-email';
-    const authUrl = new URL("https://accounts.spotify.com/authorize")
-
     // generated in the previous step
-    window.localStorage.setItem('code_verifier', codeVerifier);
-
     const params =  {
     response_type: 'code',
     client_id: clientId,
@@ -46,10 +45,13 @@ async function authenticateWithSpotify() {
 
     authUrl.search = new URLSearchParams(params).toString();
     window.location.href = authUrl.toString();
+}
 
+async function fetchTopArtists() {
+    // Fetch top artists logic here
     const urlParams = new URLSearchParams(window.location.search);
     let code = urlParams.get('code');
-    
+
     const getToken = async code => {
 
         // stored in the previous step
@@ -79,9 +81,4 @@ async function authenticateWithSpotify() {
 
     console.log("Token:")
     console.log(localStorage.getItem('access_token'))
-
-}
-
-function fetchTopArtists() {
-    // Fetch top artists logic here
 }
