@@ -98,27 +98,34 @@ async function fetchTopArtists() {
         }
     }
     
-    const body1 = await fetch('https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50&offset=0', {headers: {Authorization: 'Bearer ' + token}});
-    const response1 =await body1.json();
+    responses = []
+    
+    let body1 = await fetch('https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50&offset=0', {headers: {Authorization: 'Bearer ' + token}});
+    let response1 =await body1.json();
+    response_vals.push(response1)
 
-    const body2 = await fetch('https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50&offset=51', {headers: {Authorization: 'Bearer ' + token}});
-    const response2 =await body2.json();
+    let total_artists = response1.total
+    let remaining = total_artists - 50
+    let iters = Math.floor(remaining / 50)
+
+    for(let i = 0; i <= iters; i++) {
+        offset = 50 * (i+1)
+        let body2 = await fetch('https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=50&offset='+offset, {headers: {Authorization: 'Bearer ' + token}});
+        let response2 = await body2.json();
+        response_vals.push(response2)
+    }
 
     let cumu_pop = 0
-    for (item of response1.items) {
-        cumu_pop += item.popularity
-        p = document.createElement('p')
-        p.innerText = "[Name] " + item.name + " [Popularity]: " + item.popularity
-        document.getElementById('result2').appendChild(p)
-    }
-    for (item of response2.items) {
-        cumu_pop += item.popularity
-        p = document.createElement('p')
-        p.innerText = "[Name] " + item.name + " [Popularity]: " + item.popularity
-        document.getElementById('result2').appendChild(p)
+    for (r of response_vals) {
+        for (item of r.items) {
+            cumu_pop += item.popularity
+            // p = document.createElement('p')
+            // p.innerText = "[Name] " + item.name + " [Popularity]: " + item.popularity
+            // document.getElementById('result2').appendChild(p)
+        }
     }
 
-    avg_pop = cumu_pop / 100
+    avg_pop = cumu_pop / total_artists
 
     document.getElementById('result-text').innerText = "Your taste is " + TIERS[Math.floor(avg_pop/20)] + " tier basic based on your top 100 artists with an average popularity of " + avg_pop
 
